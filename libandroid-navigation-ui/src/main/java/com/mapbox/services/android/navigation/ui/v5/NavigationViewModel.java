@@ -66,7 +66,7 @@ public class NavigationViewModel extends AndroidViewModel {
   private ViewRouteFetcher navigationViewRouteEngine;
   private LocationEngineConductor locationEngineConductor;
   private NavigationViewEventDispatcher navigationViewEventDispatcher;
-  private NavigationSpeechPlayer speechPlayer;
+  private SpeechPlayer speechPlayer;
   private ConnectivityManager connectivityManager;
   private RouteProgress routeProgress;
   private String feedbackId;
@@ -240,9 +240,13 @@ public class NavigationViewModel extends AndroidViewModel {
   }
 
   private void initializeNavigationSpeechPlayer(NavigationViewOptions options) {
-    boolean isVoiceLanguageSupported = options.directionsRoute().voiceLanguage() != null;
-    SpeechPlayerProvider speechPlayerProvider = initializeSpeechPlayerProvider(isVoiceLanguageSupported);
-    speechPlayer = new NavigationSpeechPlayer(speechPlayerProvider);
+    if (options.speechPlayer() != null) {
+      speechPlayer = options.speechPlayer();
+    } else {
+      boolean isVoiceLanguageSupported = options.directionsRoute().voiceLanguage() != null;
+      SpeechPlayerProvider speechPlayerProvider = initializeSpeechPlayerProvider(isVoiceLanguageSupported);
+      speechPlayer = new NavigationSpeechPlayer(speechPlayerProvider);
+    }
   }
 
   @NonNull
